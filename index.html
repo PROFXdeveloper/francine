@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <title>Francine-Portfolio </title>
+    <title>Portfolio Website</title>
 </head>
 <body>
     <nav>
@@ -146,13 +146,21 @@
         const navbar = document.querySelector(".dropdown");
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
+        const dropdownLinks = document.querySelectorAll(".dropdown a");
 
         hamburg.addEventListener("click", () => {
             navbar.style.transform = "translateY(0)";
         });
 
         cancel.addEventListener("click", () => {
-            navbar.style.transform = "translateY(-100%)";
+            navbar.style.transform = "translateY(-150%)";
+        });
+        
+        // Close mobile menu when clicking a link
+        dropdownLinks.forEach(link => {
+            link.addEventListener("click", () => {
+                navbar.style.transform = "translateY(-150%)";
+            });
         });
 
         function applyTheme(theme) {
@@ -181,6 +189,22 @@
                 localStorage.setItem('theme', 'light');
             }
         });
+        
+        // Check if device width is mobile and adjust AOS settings
+        function checkMobile() {
+            if (window.innerWidth < 768) {
+                // Disable or reduce animation on mobile
+                AOS.init({
+                    disable: false,
+                    duration: 800,
+                    once: true
+                });
+            }
+        }
+        
+        // Run on page load and resize
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
     </script>
 </body>
 </html>
