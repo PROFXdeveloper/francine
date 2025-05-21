@@ -1,0 +1,856 @@
+:root {
+    --primary-color: #6A11CB; /* A vibrant purple */
+    --secondary-color: #2575FC; /* A bright blue */
+    --background-color: #f4f7f6; /* Light grayish-cyan */
+    --card-background-color: #FFFFFF;
+    --text-color: #333333;
+    --light-text-color: #FFFFFF;
+    --heading-font: 'Poppins', sans-serif;
+    --body-font: 'Poppins', sans-serif;
+    --shadow: 0 5px 15px rgba(0,0,0,0.1);
+    --border-radius: 8px;
+    --separator-color: #e0e0e0;
+    --dropdown-bg: rgba(255, 255, 255, 0.9);
+    --main-image-bg-filter: none; /* For main_bg.png */
+}
+
+body[data-theme="dark"] {
+    --primary-color: #9B59B6; /* Adjusted purple for dark mode */
+    --secondary-color: #3498DB; /* Adjusted blue for dark mode */
+    --background-color: #050404; /* Dark blue-gray */
+    --card-background-color: #000000; /* Slightly lighter dark blue-gray */
+    --text-color: #ecf0f1; /* Light gray for text */
+    --light-text-color: #1a1a1a; /* Dark text for elements on light backgrounds in dark mode */
+    --shadow: 0 5px 20px rgba(0,0,0,0.4); /* Darker shadow */
+    --separator-color: #4a6278; /* Darker separator */
+    --dropdown-bg: rgba(44, 62, 80, 0.95); /* Darker dropdown background */
+    --main-image-bg-filter: brightness(0.8) saturate(0.9); /* Adjust background image in dark mode */
+}
+
+
+*{
+    padding: 0;
+    margin: 0;
+    font-family: var(--body-font);
+    box-sizing: border-box;
+}
+
+body{
+    background-color: var(--background-color);
+    width: 100%;
+    min-height: 100vh; /* Use min-height for better flexibility */
+    position: relative;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+nav{
+    z-index: 1000; /* Ensure nav is on top */
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 10vh;
+    background-color: var(--card-background-color); /* Give nav a background */
+    box-shadow: var(--shadow); /* Add a subtle shadow */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for theme change */
+}
+
+nav .nav-container{
+    width: 90%;
+    max-width: 1200px;
+    left: 5;
+    height: 100%;
+    display: flex;
+    justify-content: space-between; /* Keep space between logo and nav items */
+    align-items: center;
+}
+
+.logo {
+    flex: 1; /* Give the logo some space */
+}
+
+.nav-items-right {
+    flex: 2; /* Give nav items more space */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the items in their space */
+}
+
+.links {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Wrapper for right side items in nav */
+.nav-items-right {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between toggle and links */
+}
+
+/* Theme Switch Styles */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px; /* Width of the switch */
+    height: 28px; /* Height of the switch */
+}
+
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px; /* Size of the circle */
+    width: 20px;  /* Size of the circle */
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px var(--primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(22px); /* How much the circle moves */
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+
+nav .nav-container .links {
+    display: flex;
+    gap: 10px; /* Add gap between links */
+}
+
+.nav-container .logo h1{
+    color: var(--primary-color); /* Use primary color for logo */
+    font-family: var(--heading-font);
+    font-weight: 700;
+}
+
+.nav-container .links .link a{
+    font-size: 1rem;
+    color: var(--text-color);
+    text-decoration: none;
+    margin: 0 10px; /* Adjusted margin */
+    position: relative;
+    transition: 0.3s ease; /* Smoother transition */
+    padding: 5px 0; /* Add some padding for better click area */
+    font-weight: 500;
+}
+
+.nav-container .links .link a::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px; /* Adjusted position */
+    background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    height: 2px; /* Thinner underline */
+    border-radius: var(--border-radius);
+    width: 0;
+    transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.nav-container .links .link a:hover{
+    color: var(--primary-color);
+}
+.nav-container .links .link a:hover::before{
+    width: 100%;
+}
+
+
+nav svg{
+    position: absolute;
+    right: 20px;
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%);
+    fill: var(--text-color);
+    cursor: pointer;
+    display: none;
+}
+
+nav .dropdown{
+    backdrop-filter: blur(10px); /* Enhanced blur */
+    background-color: var(--dropdown-bg); /* Semi-transparent white */
+    position: absolute;
+    top: 10vh; /* Start below the navbar */
+    left: 0; /* Align to left */
+    width: 100%;
+    height: auto;
+    transform: translateY(-150%); /* Start further up */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.4s ease-in-out, background-color 0.3s ease; /* Smoother transition */
+    box-shadow: var(--shadow);
+    padding: 10px 0;
+}
+
+nav .dropdown a{
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 1.2rem; /* Adjusted size */
+    text-align: center;
+    padding: 15px 0; /* Increased padding */
+    width: 100%;
+    transition: 0.2s linear;
+    font-weight: 500;
+}
+
+.dropdown a:hover{
+    background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: var(--light-text-color);
+}
+
+hr{
+    border: none; /* Remove default border */
+    height: 1px;
+    background-color: var(--separator-color); /* Lighter separator */
+    margin: 20px 0; /* Add some margin */
+    transition: background-color 0.3s ease;
+}
+
+section{
+    width: 100%;
+    /* height: 90vh; Remove fixed height, let content define it */
+    padding: 60px 0; /* Add padding to sections */
+    transition: background-color 0.3s ease; /* For sections that might change bg */
+}
+section .content{
+    width: 90%; /* Use percentage */
+    max-width: 1200px; /* Max width */
+    margin: 0 auto; /* Center content */
+    height: 100%;
+    display: flex;
+    justify-content: space-between; /* Adjust as needed */
+    align-items: center;
+    gap: 40px; /* Add gap between content and images */
+}
+
+.content .main-content{
+    display: flex;
+    flex-direction: column;
+    /* margin: 0 10%; Removed fixed margin */
+    flex-basis: 50%; /* Allow content to take up space */
+}
+
+.main-content h1{
+    font-size: clamp(2.5rem, 1rem + 6vw, 4.5rem); /* Adjusted clamp values */
+    font-family: var(--heading-font);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.main-content span{
+    font-size: clamp(2.8rem, 1rem + 6vw, 4.8rem); /* Adjusted clamp values */
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    font-weight: 800;
+    font-family: var(--heading-font);
+}
+
+.main-content h2{
+    font-size: clamp(1.5rem, 0.8rem + 3vw, 2.5rem); /* Adjusted clamp values */
+    color: var(--text-color);
+    font-family: var(--heading-font);
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.main-content .button{
+    width: auto; /* Let button define its width */
+    margin: 20px 0 10px 0;
+    height: auto; /* Let button content define height */
+}
+
+.button button{
+    cursor: pointer;
+    padding: 12px 30px; /* Use padding for sizing */
+    border-radius: var(--border-radius);
+    background-image: linear-gradient(to right, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: var(--light-text-color);
+    border: none;
+    outline: none;
+    font-size: 1rem; /* Adjusted size */
+    font-weight: 600;
+    transition: 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-transform: uppercase;
+}
+
+.button button:hover{
+    background-image: linear-gradient(to right, var(--secondary-color) 0%, var(--primary-color) 100%);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    transform: translateY(-2px);
+}
+
+.content .images{
+    width: auto; /* Adjust width */
+    flex-basis: 45%; /* Allow images to take up space */
+    position: relative;
+    display: flex;
+    /* margin-top: 5px; */
+    justify-content: center;
+    align-items: center; /* Align items */
+}
+
+.images img{
+    width: 80%; /* Adjust this percentage as needed */
+    max-width: 500px; /* Optional: sets a maximum size */
+    height: auto; /* Maintains aspect ratio */
+
+    border-radius: var(--border-radius);
+}
+
+.images img:nth-child(1){ /* main_bg.png */
+    box-shadow: var(--shadow);
+    filter: var(--main-image-bg-filter); /* Apply filter for dark mode */
+    transition: filter 0.3s ease;
+}
+
+.images img:nth-child(2){ /* main.png */
+    position: absolute;
+    max-width: 70%; /* Adjust size relative to container */
+    /* margin: 100px; Removed fixed margin */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* Styles for the Skills Section */
+#skills {
+    background-color: var(--card-background-color); /* Give skills section a distinct background */
+    padding: 60px 0;
+}
+
+.skills-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.skills-container h2 {
+    font-size: clamp(2rem, 1rem + 4vw, 3rem);
+    margin-bottom: 40px;
+    color: var(--text-color);
+    font-family: var(--heading-font);
+    font-weight: 700;
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.skill-item {
+    background-color: var(--background-color); /* Slightly different bg for cards */
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.skill-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.skill-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background-image: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.skill-item h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    font-family: var(--heading-font);
+    font-weight: 600;
+}
+
+.skill-item p {
+    font-size: 0.95rem;
+    color: var(--text-color); /* Use theme variable instead of hardcoded color */
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+/* Add styles for skill progress bars */
+.skill-progress {
+    width: 100%;
+    height: 8px;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 4px;
+    margin-top: 15px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    border-radius: 4px;
+    transition: width 1s ease-in-out;
+}
+
+/* Project links styling */
+.project-links {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.project-links a {
+    padding: 8px 15px;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.view-project {
+    background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: white;
+}
+
+.github-link {
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.view-project:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.github-link:hover {
+    background-color: rgba(106, 17, 203, 0.1);
+    transform: translateY(-2px);
+}
+
+/* About section styling */
+#about {
+    padding: 80px 0;
+}
+
+.about-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.about-container h2 {
+    font-size: clamp(2rem, 1rem + 4vw, 3rem);
+    margin-bottom: 40px;
+    color: var(--text-color);
+    font-family: var(--heading-font);
+    font-weight: 700;
+    text-align: center;
+}
+
+.about-content {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+}
+
+.about-image {
+    flex: 1;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.about-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.about-image:hover img {
+    transform: scale(1.03);
+}
+
+.about-text {
+    flex: 1.5;
+}
+
+.about-text p {
+    margin-bottom: 20px;
+    line-height: 1.8;
+}
+
+.about-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.stat {
+    flex: 1;
+    padding: 15px;
+    background-color: var(--card-background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease;
+}
+
+.stat:hover {
+    transform: translateY(-5px);
+}
+
+.stat h3 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+/* Contact section styling */
+#contact {
+    background-color: var(--card-background-color);
+    padding: 80px 0;
+}
+
+.contact-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.contact-container h2 {
+    font-size: clamp(2rem, 1rem + 4vw, 3rem);
+    margin-bottom: 40px;
+    color: var(--text-color);
+    font-family: var(--heading-font);
+    font-weight: 700;
+    text-align: center;
+}
+
+.contact-content {
+    display: flex;
+    gap: 40px;
+}
+
+.contact-info {
+    flex: 1;
+}
+
+.contact-item {
+    margin-bottom: 25px;
+}
+
+.contact-item h3 {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.social-link {
+    padding: 10px 20px;
+    background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: white;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.contact-form {
+    flex: 1.5;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--separator-color);
+    border-radius: var(--border-radius);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--body-font);
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(106, 17, 203, 0.2);
+}
+
+.submit-btn {
+    padding: 12px 30px;
+    background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Footer styling */
+footer {
+    padding: 30px 0;
+    background-color: var(--background-color);
+}
+
+.footer-content {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-links a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: var(--primary-color);
+}
+
+/* Add smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Enhanced mobile responsiveness */
+@media (max-width:768px){
+    .nav-container .links .link{
+        display: none;
+    }
+
+    .nav-items-right .links { /* Ensure links are hidden, toggle remains */
+        display: none;
+    }
+    
+    .nav-items-right { /* Adjust spacing for mobile if needed */
+        gap: 15px;
+    }
+
+  
+    
+    .nav-container .logo{
+        position: absolute;
+        top: 50%;
+        left: 5%; /* Adjust positioning */
+        transform: translateY(-50%);
+    }
+
+    section .content { /* Ensure hero section stacks on mobile */
+        flex-direction: column-reverse;
+        gap: 30px; /* Add gap when stacked */
+    }
+    
+    .content .main-content {
+        text-align: center; /* Center text on mobile */
+        margin: 0; /* Reset margin */
+        align-items: center; /* Center button */
+    }
+
+    .content .images{
+        width: 80%; /* Adjust image container width */
+        margin-bottom: 20px;
+    }
+
+    .images img{
+        /* width: 180%; */ /* This might be too large, max-width:100% is better */
+        margin-bottom: 10px;
+    }
+
+    .images img:nth-child(2){
+        /* width: 250px; */ /* Let max-width handle this */
+        /* margin-top: 70px; */ /* Adjust as needed or remove if auto positioning is fine */
+        max-width: 60%;
+    }
+
+    .skills-grid {
+        grid-template-columns: 1fr; /* Single column on mobile */
+    }
+
+}
+
+/* Animation enhancements */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease forwards;
+}
+
+.slide-up {
+    animation: slideUp 0.8s ease forwards;
+}
+
+
+/* Decrease the size of images in the main section */
+.images {
+    max-width: 80%; /* Adjust this percentage as needed */
+    margin: 0 auto; /* Center the image container */
+}
+
+.images img {
+    max-width: 100%; /* Make sure image doesn't exceed container width */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Remove any extra space below the image */
+}
+
+/* Decrease the size of the about section image */
+.about-image {
+    max-width: 80%; /* Adjust this percentage as needed */
+    margin: 0 auto; /* Center the image */
+}
+
+.about-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+.project-image {
+    width: 100%; /* or set a fixed width like 200px */
+    height: auto;
+    max-height: 300px; /* adjust as needed */
+    object-fit: cover;
+    border-radius: 8px; /* optional rounded corners */
+    margin-bottom: 15px; /* space between image and text */
+}
+
+.skill-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+.button-container {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Space between button and icon */
+}
+
+
+
+/* Button group container */
+.button-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Modern Facebook icon */
+.social-icon.facebook {
+    background: transparent;
+    color: #0866FF; /* Facebook's modern blue */
+    margin-top: 10px;
+    margin-left: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px; /* Slightly rounded corners */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.social-icon.facebook i {
+    font-size: 50px; /* Larger icon */
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.social-icon.facebook:hover i {
+    animation: pulse 1.5s infinite;
+}
